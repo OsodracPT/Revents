@@ -62,22 +62,20 @@ class EventDashboard extends Component {
       events: eventsDashBoard,
       isOpen: false
     };
-
-    this.handleFormOpen = this.handleFormOpen.bind(this);
-    this.handleCancel = this.handleCancel.bind(this);
   }
 
-  handleFormOpen() {
+  handleFormOpen = () => {
     this.setState({
       isOpen: true
     });
-  }
+  };
 
-  handleCancel() {
+  handleCancel = () => {
     this.setState({
       isOpen: false
     });
-  }
+  };
+
   render() {
     return (
       <Grid>
