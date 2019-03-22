@@ -1,10 +1,10 @@
 import React, { Component } from "react";
 import { Menu, Container, Button } from "semantic-ui-react";
-import { NavLink, Link } from "react-router-dom";
+import { NavLink, Link, withRouter } from "react-router-dom";
 import SignedOutMenu from "../Menus/SignedOutMenu";
 import SignedInMenu from "../Menus/SignedInMenu";
 
-export default class NavBar extends Component {
+class NavBar extends Component {
   state = {
     authenticated: false
   };
@@ -32,17 +32,22 @@ export default class NavBar extends Component {
             Re-vents
           </Menu.Item>
           <Menu.Item as={NavLink} to="/events" name="Events" />
-          <Menu.Item as={NavLink} to="/people" name="People" />
-          <Menu.Item>
-            <Button
-              as={Link}
-              to="/createEvent"
-              floated="right"
-              positive
-              inverted
-              content="Create Event"
-            />
-          </Menu.Item>
+          {authenticated && (
+            <Menu.Item as={NavLink} to="/people" name="People" />
+          )}
+          {authenticated && (
+            <Menu.Item>
+              <Button
+                as={Link}
+                to="/createEvent"
+                floated="right"
+                positive
+                inverted
+                content="Create Event"
+              />
+            </Menu.Item>
+          )}
+
           {authenticated ? (
             <SignedInMenu signOut={this.handleSignOut} />
           ) : (
@@ -53,3 +58,4 @@ export default class NavBar extends Component {
     );
   }
 }
+export default withRouter(NavBar);
