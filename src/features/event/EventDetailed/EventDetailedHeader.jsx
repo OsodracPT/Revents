@@ -30,7 +30,7 @@ function EventDetailedHeader({ event }) {
               <Item.Content>
                 <Header
                   size="huge"
-                  content="Event Title"
+                  content={event.title}
                   style={{ color: "white" }}
                 />
                 <p>{event.date}</p>
