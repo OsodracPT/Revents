@@ -5,6 +5,7 @@ import { reduxForm, Field } from "redux-form";
 import { createEvent, updateEvent, deleteEvent } from "../eventActions";
 import cuid from "cuid";
 import TextInput from "../../../app/common/form/TextInput";
+import TextArea from "../../../app/common/form/TextArea";
 
 const mapState = (state, ownProps) => {
   const eventId = ownProps.match.params.id;
@@ -69,7 +70,8 @@ class EventForm extends Component {
                 <Field
                   name="description"
                   type="text"
-                  component={TextInput}
+                  rows={3}
+                  component={TextArea}
                   placeholder="Tell us about your event"
                 />
                 <Header sub color="teal" content="Event Location Details" />
