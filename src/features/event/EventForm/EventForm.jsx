@@ -13,6 +13,7 @@ import cuid from "cuid";
 import TextInput from "../../../app/common/form/TextInput";
 import TextArea from "../../../app/common/form/TextArea";
 import SelectInput from "../../../app/common/form/SelectInput";
+import DateInput from "../../../app/common/form/DateInput";
 
 const mapState = (state, ownProps) => {
   const eventId = ownProps.match.params.id;
@@ -116,8 +117,11 @@ class EventForm extends Component {
                 <Field
                   name="date"
                   type="text"
-                  component={TextInput}
-                  placeholder="Event Date"
+                  component={DateInput}
+                  dateFormat="YYYY/MM/DD HH:mm"
+                  timeFormat="HH:mm"
+                  showTimeSelect
+                  placeholder="Date and time of event"
                 />
                 <Button
                   disabled={invalid || submitting || pristine}
