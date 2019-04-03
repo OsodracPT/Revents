@@ -1,7 +1,6 @@
 /*global google*/
 import React, { Component } from "react";
-import { Segment, Form, Button, Grid, Header } from "semantic-ui-react";
-import { connect } from "react-redux";
+import { Form, Segment, Button, Grid, Header } from "semantic-ui-react";
 import { reduxForm, Field } from "redux-form";
 import Script from "react-load-script";
 import {
@@ -10,15 +9,16 @@ import {
   isRequired,
   hasLengthGreaterThan
 } from "revalidate";
-import { createEvent, updateEvent, deleteEvent } from "../eventActions";
 import cuid from "cuid";
 import moment from "moment";
+import { geocodeByAddress, getLatLng } from "react-places-autocomplete";
+import { connect } from "react-redux";
+import { createEvent, updateEvent } from "../eventActions";
 import TextInput from "../../../app/common/form/TextInput";
 import TextArea from "../../../app/common/form/TextArea";
 import SelectInput from "../../../app/common/form/SelectInput";
 import DateInput from "../../../app/common/form/DateInput";
 import PlaceInput from "../../../app/common/form/PlaceInput";
-import { geocodeByAddress, getLatLng } from "react-places-autocomplete";
 
 const mapState = (state, ownProps) => {
   const eventId = ownProps.match.params.id;
@@ -28,13 +28,15 @@ const mapState = (state, ownProps) => {
   if (eventId && state.events.length > 0) {
     event = state.events.filter(event => event.id === eventId)[0];
   }
-  return { initialValues: event };
+
+  return {
+    initialValues: event
+  };
 };
 
 const actions = {
   createEvent,
-  updateEvent,
-  deleteEvent
+  updateEvent
 };
 
 const category = [
@@ -55,7 +57,7 @@ const validate = combineValidators({
       message: "Description needs to be at least 5 characters"
     })
   )(),
-  city: isRequired("city "),
+  city: isRequired("city"),
   venue: isRequired("venue"),
   date: isRequired("date")
 });
@@ -116,87 +118,81 @@ class EventForm extends Component {
   render() {
     const { invalid, submitting, pristine } = this.props;
     return (
-      <div>
-        <Grid>
-          <Script
-            url="https://maps.googleapis.com/maps/api/js?key=AIzaSyDzHlmk2FUNnJw8e82WyqwOzp3thD4HQfM&libraries=places"
-            onLoad={this.handleScriptLoaded}
-          />
-          <Grid.Column width={10}>
-            <Segment>
-              <Header sub color="teal" content="Event Details" />
-              <Form onSubmit={this.onFormSubmit}>
+      <Grid>
+        <Script
+          url="https://maps.googleapis.com/maps/api/js?key=AIzaSyDzHlmk2FUNnJw8e82WyqwOzp3thD4HQfM&libraries=places"
+          onLoad={this.handleScriptLoaded}
+        />
+        <Grid.Column width={10}>
+          <Segment>
+            <Header sub color="teal" content="Event Details" />
+            <Form onSubmit={this.props.handleSubmit(this.onFormSubmit)}>
+              <Field
+                name="title"
+                type="text"
+                component={TextInput}
+                placeholder="Give your event a name"
+              />
+              <Field
+                name="category"
+                type="text"
+                component={SelectInput}
+                options={category}
+                placeholder="What is your event about"
+              />
+              <Field
+                name="description"
+                type="text"
+                component={TextArea}
+                rows={3}
+                placeholder="Tell us about your event"
+              />
+              <Header sub color="teal" content="Event Location Details" />
+              <Field
+                name="city"
+                type="text"
+                component={PlaceInput}
+                options={{ types: ["(cities)"] }}
+                placeholder="Event City"
+                onSelect={this.handleCitySelect}
+              />
+              {this.state.scriptLoaded && (
                 <Field
-                  name="title"
-                  type="text"
-                  component={TextInput}
-                  placeholder="Give your event a name"
-                />
-                <Field
-                  name="category"
-                  type="text"
-                  component={SelectInput}
-                  options={category}
-                  placeholder="What is your event about"
-                />
-                <Field
-                  name="description"
-                  type="text"
-                  rows={3}
-                  component={TextArea}
-                  placeholder="Tell us about your event"
-                />
-                <Header sub color="teal" content="Event Location Details" />
-
-                <Field
-                  name="city"
+                  name="venue"
                   type="text"
                   component={PlaceInput}
                   options={{
-                    types: ["(cities)"]
+                    location: new google.maps.LatLng(this.state.cityLatLng),
+                    radius: 1000,
+                    types: ["establishment"]
                   }}
-                  placeholder="Event City"
-                  onSelect={this.handleCitySelect}
+                  placeholder="Event Venue"
+                  onSelect={this.handleVenueSelect}
                 />
-                {this.state.scriptLoaded && (
-                  <Field
-                    name="venue"
-                    type="text"
-                    component={PlaceInput}
-                    options={{
-                      location: new google.maps.LatLng(this.state.cityLatLng),
-                      radius: 1000,
-                      types: ["establishment"]
-                    }}
-                    placeholder="Event Venue"
-                    onSelect={this.handleVenueSelect}
-                  />
-                )}
-
-                <Field
-                  name="date"
-                  type="text"
-                  component={DateInput}
-                  dateFormat="YYYY-MM-DD HH:mm"
-                  timeFormat="HH:mm"
-                  showTimeSelect
-                  placeholder="Date and time of event"
-                />
-                <Button
-                  disabled={invalid || submitting || pristine}
-                  positive
-                  type="submit"
-                >
-                  Submit
-                </Button>
-                <Button onClick={this.props.history.goBack} type="button">
-                  Cancel
-                </Button>
-              </Form>
-            </Segment>
-          </Grid.Column>
-        </Grid>
-      </div>
+              )}
+              <Field
+                name="date"
+                type="text"
+                component={DateInput}
+                dateFormat="YYYY-MM-DD HH:mm"
+                timeFormat="HH:mm"
+                showTimeSelect
+                placeholder="Date and Time of Event"
+              />
+              <Button
+                disabled={invalid || submitting || pristine}
+                positive
+                type="submit"
+              >
+                Submit
+              </Button>
+              <Button onClick={this.props.history.goBack} type="button">
+                Cancel
+              </Button>
+            </Form>
+          </Segment>
+        </Grid.Column>
+      </Grid>
     );
   }
 }
