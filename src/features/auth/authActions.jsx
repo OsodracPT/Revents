@@ -1,4 +1,4 @@
-import { LOGIN_USER, SIGN_OUT_USER } from "./authConstants";
+import { SIGN_OUT_USER, LOGIN_USER } from "./authConstants";
 
 export const login = creds => {
   return {
@@ -9,7 +9,7 @@ export const login = creds => {
   };
 };
 
-export const logout = creds => {
+export const logout = () => {
   return {
     type: SIGN_OUT_USER
   };
