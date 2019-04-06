@@ -10,11 +10,13 @@ import SettingsDashboard from "../../features/event/user/Settings/SettingsDashbo
 import EventForm from "../../features/event/EventForm/EventForm";
 import HomePage from "../../features/event/home/HomePage";
 import TestComponent from "../../features/testarea/TestComponent";
+import ModalManager from "../../features/modals/ModalManager";
 
 class App extends Component {
   render() {
     return (
       <div>
+        <ModalManager />
         <Switch>
           <Route exact path="/" component={HomePage} />
         </Switch>
