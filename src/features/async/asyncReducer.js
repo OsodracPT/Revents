@@ -1,31 +1,31 @@
 import {
     createReducer
-} from "../../app/common/util/reducerUtil";
+} from '../../app/common/util/reducerUtil';
 import {
-    ASYNC_ACTION_FINISH,
     ASYNC_ACTION_ERROR,
-    ASYNC_ACTION_START
-} from "./asyncConstants";
+    ASYNC_ACTION_START,
+    ASYNC_ACTION_FINISH
+} from './asyncConstants';
 
 const initialState = {
     loading: false
 }
 
-const asyncActionStarted = (state) => {
+export const aysncActionStarted = (state, payload) => {
     return {
         ...state,
         loading: true
     }
 }
 
-const asyncActionFinished = (state) => {
+export const asyncActionFinished = (state) => {
     return {
         ...state,
         loading: false
     }
 }
 
-const asyncActionError = (state) => {
+export const asyncActionError = (state) => {
     return {
         ...state,
         loading: false
@@ -33,8 +33,7 @@ const asyncActionError = (state) => {
 }
 
 export default createReducer(initialState, {
-    [ASYNC_ACTION_START]: asyncActionStarted,
-    [ASYNC_ACTION_FINISH]: asyncActionError,
+    [ASYNC_ACTION_START]: aysncActionStarted,
+    [ASYNC_ACTION_FINISH]: asyncActionFinished,
     [ASYNC_ACTION_ERROR]: asyncActionError
-
 })
