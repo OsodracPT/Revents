@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import { Button, Icon } from "semantic-ui-react";
-import { incrementCounter, decrementCounter } from "./testActions";
+import { incrementAsync, decrementAsync } from "./testActions";
 import Script from "react-load-script";
 import PlacesAutocomplete, {
   geocodeByAddress,
@@ -10,12 +10,13 @@ import PlacesAutocomplete, {
 import GoogleMapReact from "google-map-react";
 
 const mapState = state => ({
-  data: state.test.data
+  data: state.test.data,
+  loading: state.async.loading
 });
 
 const actions = {
-  incrementCounter,
-  decrementCounter
+  incrementAsync,
+  decrementAsync
 };
 
 const Marker = () => <Icon name="marker" size="big" color="red" />;
@@ -55,7 +56,7 @@ class TestComponent extends Component {
       onChange: this.onChange
     };
 
-    const { incrementCounter, decrementCounter, data } = this.props;
+    const { incrementAsync, decrementAsync, data, loading } = this.props;
     return (
       <div>
         <Script
@@ -64,8 +65,18 @@ class TestComponent extends Component {
         />
         <h1>Test Area</h1>
         <h3>The answer is: {data}</h3>
-        <Button onClick={incrementCounter} color="green" content="Increment" />
-        <Button onClick={decrementCounter} color="red" content="Decrement" />
+        <Button
+          loading={loading}
+          onClick={incrementAsync}
+          color="green"
+          content="Increment"
+        />
+        <Button
+          loading={loading}
+          onClick={decrementAsync}
+          color="red"
+          content="Decrement"
+        />
         <br />
         <br />
         <form onSubmit={this.handleFormSubmit}>

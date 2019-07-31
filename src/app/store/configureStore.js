@@ -9,9 +9,9 @@ export const configureStore = preloadedState => {
 
   const storeEnhancers = [middlewareEnhancer];
 
-  const composeEnhancer = composeWithDevTools(...storeEnhancers);
+  const composedEnhancer = composeWithDevTools(...storeEnhancers);
 
-  const store = createStore(rootReducer, preloadedState, composeEnhancer);
+  const store = createStore(rootReducer, preloadedState, composedEnhancer);
 
   if (process.env.NODE_ENV !== "production") {
     if (module.hot) {
